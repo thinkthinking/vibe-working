@@ -115,6 +115,81 @@ The following are already installed and configured in this project:
 
 ---
 
+## 📚 Reference Management
+
+This project includes a utility to manage external reference repositories (for context/indexing) without polluting your project source or git history.
+
+### Usage
+
+1. **Add Repositories**: Add GitHub URLs to `.context/references/references-list.txt` (one per line).
+
+   ```text
+   https://github.com/vercel/ai.git
+   ```
+
+2. **Run Update Script**:
+
+   ```bash
+   ./scripts/update-references.sh
+   ```
+
+The script will clone/update repositories into `.context/references/` and automatically ensure they are added to `.gitignore`.
+
+---
+
+## 🤖 AI Coding Agents Setup
+
+Best practices for configuring command-line AI agents (Claude Code & Codex) with this project, specifically for ZenMux/API compatibility.
+
+### Claude Code
+
+**Installation**:
+
+```bash
+pnpm install -g @anthropic-ai/claude-code
+```
+
+**Configuration** (`~/.claude/settings.json`):
+
+```json
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "sk-ai-v1-a6fcf27541bedbb3fe858153f6af51fdf79046ed22059e04d0d1bb1e0b48fbd9",
+    "ANTHROPIC_BASE_URL": "https://zenmux.ai/api/anthropic",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "openai/gpt-5.1-codex-mini",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "anthropic/claude-sonnet-4.5",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "google/gemini-3-pro-preview"
+  },
+  "alwaysThinkingEnabled": true
+}
+```
+
+### Codex CLI
+
+**Installation**:
+
+```bash
+pnpm install -g @openai/codex
+```
+
+**Configuration** (`~/.codex/config.toml`):
+
+```toml
+model_provider = "zenmux"
+model = "openai/gpt-5.1-codex"
+
+[model_providers.zenmux]
+name = "ZenMux"
+base_url = "https://zenmux.ai/api/v1"
+env_key = "ZENMUX_API_KEY"
+```
+
+**Environment**:
+Add `export ZENMUX_API_KEY="sk-ai-v1-your-key"` to your shell profile (`~/.zshrc` or `~/.bashrc`).
+
+---
+
 ## 📚 Reference: "Zero to One" Guide
 
 > **Note**: These commands are **FOR REFERENCE ONLY**. They document how this scaffold was originally created. **You do not need to run these** unless you are building a brand new project from scratch without this scaffold.
