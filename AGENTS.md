@@ -1,37 +1,51 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- Keep application logic in `src/` with feature-focused subfolders (e.g., `src/features/auth`, `src/lib/api`).
-- Mirror business logic tests under `tests/` using the same folder names (`tests/features/auth/user.spec.ts`).
-- Client-visible assets (static copy, icons, mock data) live in `assets/`; tooling scripts belong in `tools/`.
-- Update `README.md` whenever new top-level directories appear and include short notes on their ownership.
+- **Root**: Hybrid environment with `package.json` (Node.js) and `pyproject.toml` (Python).
+- **Frontend (`src/`)**:
+  - `src/app/`: Next.js 16 App Router pages, layouts, and global styles.
+  - `src/components/`: React components; `ui/` contains shadcn/ui primitives.
+  - `src/lib/`: Shared utilities (e.g., `utils.ts`).
+- **Backend/Scripts**: Python scripts (e.g., `main.py`) managed by `uv`.
+- **Assets**: Static files live in `public/`.
+
 
 ## Build, Test, and Development Commands
-- `npm install`: installs dependencies; run after any package update.
-- `npm run dev`: starts the live-reload development server; use during feature work.
-- `npm run build`: emits the production bundle into `dist/`; verify before release branches.
-- `npm test`: executes the Jest suite once; combine with `npm test -- --watch` while iterating.
-- `npm run lint`: enforces ESLint/Prettier checks; required before opening a PR.
+### Node.js / Next.js
+- `pnpm install`: Install Node dependencies.
+- `pnpm dev`: Start the development server at http://localhost:3000.
+- `pnpm build`: Compile the application for production.
+- `pnpm lint`: Run ESLint to enforce code quality.
+- `pnpm dlx shadcn@latest add [name]`: Add new UI components.
+
+### Python
+- `uv sync`: Install Python dependencies.
+- `uv run main.py`: Execute the main Python entry point.
+- `uv add [package]`: Add new Python packages.
+
 
 ## Coding Style & Naming Conventions
-- TypeScript with 2-space indentation, trailing commas, and single quotes.
-- Prefer functional, stateless modules; export default only for React components.
-- Use descriptive file names (`user-profile-card.tsx`) and camelCase for variables/functions; KEEP_CONSTANTS in SCREAMING_SNAKE_CASE.
-- Format via `npm run lint` (ESLint + Prettier). Do not hand-edit compiled output in `dist/`.
+- **TypeScript/React**:
+  - Use **React 19** patterns (Server Components, Server Actions, `use` hook).
+  - Style with **Tailwind CSS v4** (configured in `globals.css` or inline).
+  - Use functional components with named exports or default exports for pages.
+  - File naming: camelCase for logic, kebab-case for utilities/components if preferred, or PascalCase for React components.
+- **Python**: Follow PEP 8 standards; target Python 3.13+.
+- **Linting**: Ensure `pnpm lint` passes before committing.
+
 
 ## Testing Guidelines
-- Jest drives both unit and component tests. Follow `*.spec.ts` (sync) and `*.test.ts` (integration) naming.
-- Aim for 80% line coverage per package (`npm test -- --coverage`).
-- Mock external services with `msw` fixtures stored in `tests/mocks/`.
-- Add reproduction tests for every bug fix before touching implementation.
+- Currently, no specific test runner is configured in `package.json`.
+- If adding tests, prefer **Vitest** or **Jest** for the frontend and **pytest** for Python scripts.
+- Ensure major features are verified manually if automated tests are absent.
 
 ## Commit & Pull Request Guidelines
-- Use Conventional Commits (`feat: add dashboard filters`). One logical change per commit.
-- Ensure every PR description answers: what/why/how-tested. Attach issue links and screenshots for UI work.
-- Request review after CI passes and link to any follow-up tasks in the description.
-- Squash commits on merge; leave a concise summary plus notable follow-up TODOs in the PR body.
+- Write clear, descriptive commit messages (e.g., `feat: add user profile page`).
+- Pull Requests should include a summary of changes and verify that `pnpm build` and `pnpm lint` pass.
+- Update dependencies using `pnpm` for Node and `uv` for Python.
 
-## Security & Configuration Tips
-- Never commit secrets; reference them via `.env.example` and document required keys in README.
-- Validate third-party libraries for permissive licenses before adding them to `package.json`.
-- For local debugging, prefer feature flags over temporary guards and remove them before release.
+## Configuration & Environment
+- **Secrets**: Use `.env.local` for local secrets; never commit sensitive keys.
+- **Package Managers**: Strict use of `pnpm` (Node) and `uv` (Python).
+- **Tools**: `uv` manages the Python environment/virtualenv automatically.
+
